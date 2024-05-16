@@ -23,21 +23,6 @@ const resetGame = () => {
   msgContainer.classList.add("hide");
 };
 
-boxes.forEach((box) => {
-  box.addEventListener("click", () => {
-    if (turnO) {
-      box.innerText = "O";
-      turnO = false;
-    } else {
-      box.innerText = "X";
-      turnO = true;
-    }
-    box.disabled = true;
-
-    checkWinner();
-  });
-});
-
 const disableBoxes = () => {
   for (let box of boxes) {
     box.disabled = true;
@@ -56,19 +41,53 @@ const showWinner = (winner) => {
   disableBoxes();
 };
 
+const checkDraw = () => {
+  for (let box of boxes) {
+    if (box.innerText === "") {
+      // If there is any empty box, the game is not a draw
+      return false;
+    }
+  }
+  // If all boxes are filled and there's no winner, it's a draw
+  return true;
+};
+
 const checkWinner = () => {
   for (let pattern of winPatterns) {
     let pos1Val = boxes[pattern[0]].innerText;
     let pos2Val = boxes[pattern[1]].innerText;
     let pos3Val = boxes[pattern[2]].innerText;
 
-    if (pos1Val != "" && pos2Val != "" && pos3Val != "") {
+    if (pos1Val !== "" && pos2Val !== "" && pos3Val !== "") {
       if (pos1Val === pos2Val && pos2Val === pos3Val) {
         showWinner(pos1Val);
+        return; // Return early if there's a winner
       }
     }
   }
+
+  if (checkDraw()) {
+    // If no winner and it's a draw
+    msg.innerText = "It's a draw!";
+    msgContainer.classList.remove("hide");
+    disableBoxes();
+  }
 };
+
+boxes.forEach((box) => {
+  box.addEventListener("click", () => {
+    if (turnO) {
+      box.innerText = "O";
+      turnO = false;
+    } else {
+      box.innerText = "X";
+      turnO = true;
+    }
+    box.disabled = true;
+
+    checkWinner();
+  });
+});
 
 newGameBtn.addEventListener("click", resetGame);
 resetBtn.addEventListener("click", resetGame);
