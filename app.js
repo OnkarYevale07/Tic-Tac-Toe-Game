@@ -44,11 +44,9 @@ const showWinner = (winner) => {
 const checkDraw = () => {
   for (let box of boxes) {
     if (box.innerText === "") {
-      // If there is any empty box, the game is not a draw
       return false;
     }
   }
-  // If all boxes are filled and there's no winner, it's a draw
   return true;
 };
 
@@ -61,13 +59,12 @@ const checkWinner = () => {
     if (pos1Val !== "" && pos2Val !== "" && pos3Val !== "") {
       if (pos1Val === pos2Val && pos2Val === pos3Val) {
         showWinner(pos1Val);
-        return; // Return early if there's a winner
+        return;
       }
     }
   }
 
   if (checkDraw()) {
-    // If no winner and it's a draw
     msg.innerText = "It's a draw!";
     msgContainer.classList.remove("hide");
     disableBoxes();
